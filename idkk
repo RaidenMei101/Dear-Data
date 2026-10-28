@@ -1,0 +1,11 @@
+void setup() {
+  size(600, 400);
+}
+
+void draw() {
+  background(240);
+
+  ellipse(150, 200, 80, 80);
+  ellipse(300, 200, 80, 80);
+  ellipse(450, 200, 80, 80);
+}
