@@ -1,3 +1,4 @@
+
 import java.io.File;
 
 // My 16 anime characters
@@ -140,4 +141,202 @@ void draw() {
 }
 
 // DRAW CHARACTERS
-void drawCharacters(String characterText, float shapeSize) { //This method receives a character's name and a shape size, then uses them to draw the character's shape.
+void drawCharacters(String characterText, float shapeSize) { //This method is used to draw each character's shape at the correct size and with its matching emotion colour
+
+  //Separate two character names if they contain "and" using the 'split()' method
+  String[] people = split(characterText, " and ");
+
+  for (int person = 0; person < people.length; person++) { //Characters get processed: for loop runs for each character, and increments by 1 each time it loops
+
+    pushMatrix(); //Saves the drawing coordinates so it doesn't affect everything
+
+   //Code if there are 2 characters in one, or if there is just one
+   if (people.length == 2) {  // Are there TWO characters?
+
+  if (person == 0) {
+    translate(-22, 0, 0);  // First shape goes LEFT
+  } else {
+    translate(22, 0, 0);   // Second shape goes RIGHT
+  }
+
+  scale(shapeSize / 50.0 * 0.7); // Make both smaller
+
+} else {  // There is only ONE character
+
+  scale(shapeSize / 50.0); // Use normal size
+}
+
+    int shapeNumber = characterShape(people[person]);  // The code looks at the current character and finds their shape, and then saves it into the 'shapeNumber' variable
+    drawShape(shapeNumber); //The 'drawShape()' method actually DRAWS the shape
+
+    popMatrix(); //This just restores the saved settings
+  }
+}
+
+
+// HERE is where each of my 16 characters size is determined, (e.g): Tenza is shape 0, and the Sphere for Tenza has a radius of 22 pixels
+void drawShape(int shapeNumber) { //'drawShape()' method, uses the number of the shape to draw it, (it's voide because it doesn't return anything
+
+  if (shapeNumber == 0) {
+    sphere(22);  // Tenza
+  }
+
+  else if (shapeNumber == 1) {
+    box(35);  // Nurugai
+  }
+
+  else if (shapeNumber == 2) {
+    box(20, 45, 20);  // Shion
+  }
+
+  else if (shapeNumber == 3) {
+    rotateZ(PI / 4);
+    box(32);  // Aza Chobei
+  }
+
+  else if (shapeNumber == 4) {
+    box(48, 20, 20);  // Senta Dono
+  }
+
+  else if (shapeNumber == 5) {
+    scale(1.5, 0.7, 1);
+    sphere(22);  // Yuzuriha
+  }
+
+  else if (shapeNumber == 6) {
+    box(46, 10, 14);
+    box(10, 46, 14);  // Gabimaru
+  }
+
+  else if (shapeNumber == 7) {
+    rotateZ(PI / 4);
+    box(20, 35, 20);  // Sagiri
+  }
+
+  else if (shapeNumber == 8) {
+    sphere(12);
+    translate(0, -20, 0);
+    sphere(12);  // Hoko
+  }
+
+  else if (shapeNumber == 9) {
+    sphere(12);
+    translate(-15, 15, 0);
+    sphere(12);
+    translate(30, 0, 0);
+    sphere(12);  // Mei
+  }
+
+  else if (shapeNumber == 10) {
+    box(18, 18, 48);  // Shugen Dono
+  }
+
+  else if (shapeNumber == 11) {
+    box(55, 15, 15);  // Thoma
+  }
+
+  else if (shapeNumber == 12) {
+    box(12, 48, 12);
+    box(48, 12, 12);  // Fuchi
+  }
+
+  else if (shapeNumber == 13) {
+    scale(1, 1, 0.5);
+    sphere(25);  // Gantetsusai
+  }
+
+  else if (shapeNumber == 14) {
+    rotateZ(PI / 6);
+    box(25, 45, 15);  // Ju Fa
+  }
+
+  else if (shapeNumber == 15) {
+    scale(0.7, 1.5, 0.7);
+    sphere(22);  // Tao Fa
+  }
+}
+
+// Finds a colour for an emotion
+int emotionColour(String emotion) { //The method 'emotionColour()' receives the emotion's name
+
+  emotion = emotion.toLowerCase(); //It then converts the emotion's name into all lowercase using the '.toLowerCase()' method, so we can comapre without potential errors
+
+  if (emotion.contains("awe"))
+    return palette[1]; //Here we are returning the colour for 'Awe' (index 1) back to where the 'emotionColour()' method was called
+
+  if (emotion.contains("sorrow") ||
+      emotion.contains("devastat") || //This is the sort of root word for som of the words I had on my emotion I felt
+      emotion.contains("disillusion") ||
+      emotion.contains("anguish"))
+    return palette[0];
+
+  if (emotion.contains("fascination") ||
+      emotion.contains("anticipation"))
+    return palette[2];
+
+  if (emotion.contains("frustration"))
+    return palette[3];
+
+  if (emotion.contains("tension") ||
+      emotion.contains("apprehension"))
+    return palette[4];
+
+  if (emotion.contains("admiration") ||
+      emotion.contains("badassery"))
+    return palette[5];
+
+  if (emotion.contains("empathy") ||
+      emotion.contains("sympathy"))
+    return palette[6];
+
+  if (emotion.contains("exhilaration") ||
+      emotion.contains("resonance"))
+    return palette[7];
+
+  return color(190); //BACKUP colour in case none of the emotions fit the legend!
+}
+
+//Finds size based on emotional intensity
+float emotionSize(String emotion) { //The 'emotionSize()' method will take the current emotions and return the shape size based on its intensity
+
+  emotion = emotion.toLowerCase();
+
+  // Strong emotions produce larger shapes
+  if (emotion.contains("devastat") ||
+      emotion.contains("crushing") ||
+      emotion.contains("anguish") ||
+      emotion.contains("triumphant"))
+    return 72; //Shape size
+
+  // Medium emotions
+  if (emotion.contains("poignant") ||
+      emotion.contains("tender") ||
+      emotion.contains("enamoured") ||
+      emotion.contains("conflicted"))
+    return 58;
+
+  // Remaining emotions
+  return 46;
+}
+
+
+//Finds the character's shape number
+int characterShape(String character) { //'characterShape()' method takes the character's name and returns the number assigned to their shape
+
+  character = trim(character).toLowerCase();
+
+  // Treat the two spellings of Chobei as the same character because I didn't know which spelling to go with, using the '.replace()' method
+  character = character.replace("azo chobei", "aza chobei");
+
+  // This loop searches through all 16 of my character names until it finds a match, it then returns the character's index, which is thenused to identify their shape
+  for (int characterNumber = 0;
+       characterNumber < names.length;
+       characterNumber++) {
+
+    if (character.equals(names[characterNumber])) {
+      return characterNumber;
+    }
+  }
+
+  return -1; //Tells the programme that no matching character name was found, and it needs to return -1 because the return type for the 'characterShape()' method is int!
+}
